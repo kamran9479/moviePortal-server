@@ -65,8 +65,31 @@ async function run() {
         const id = req.params.id;
         const quary = {_id: new ObjectId(id)}
         const find = await database.findOne(quary)
-        console.log(find)
+        const alreadyExist = favMovie.findOne(quary)
+        if(alreadyExist){
+            return res.send('alreadyExist')
+        }
         const result= await favMovie.insertOne(find);
+        res.send(result)
+    })
+
+// put api 
+    app.put('/allMovies/:id',async(req,res)=>{
+        const data = req.body;
+        const id = req.params.id;
+        const quary = {_id: new ObjectId(id)};
+        const update ={
+            $set:{
+                img: data.img,
+                title: data.title,
+                genre: data.genre,
+                duration: data.duration,
+                year: data.year,
+                rating: data.rating,
+                summary: data.summary
+            }
+        };
+        const result= await database.updateOne(quary,update);
         res.send(result)
     })
 
